@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-mkdir build_dir
-cd build_dir || exit
-
 CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
 CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
 CPPFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
