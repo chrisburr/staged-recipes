@@ -48,11 +48,11 @@ requirements:
     - graphviz # [linux]
     - qt # [linux]
 
-# test:
-#   imports:
-#     - ROOT
-#   commands:
-#     - root -b -q
+test:
+  imports:
+    - ROOT
+  commands:
+    - root -b -q
 
 about:
   home: https://root.cern.ch
