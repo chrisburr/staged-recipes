@@ -16,7 +16,7 @@ source:
   # sha256: 18a4ce42ee19e1a810d5351f74ec9550e6e422b13b5c58e0c3db740cdbc569d1
 
 build:
-  number: 3
+  number: 4
   binary_relocation: True
   detect_binary_files_with_prefix: True
   rpaths:

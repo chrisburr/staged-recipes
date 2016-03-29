@@ -138,7 +138,7 @@ def fix_file(filename, env_path, padded_env_path=None):
 
 
 def format_match(match):
-    return repr(match).replace('\\x00', '-')[0:100]
+    return repr(match[0:400]).replace('\\x00', '-')[0:100]
 
 
 if __name__ == '__main__':
@@ -162,6 +162,14 @@ if __name__ == '__main__':
         for fn in DEFAULT_FILES:
             fix_file(fn, env_path, padded_env_path)
 
+        log.warn(
+            'If when launching ROOT the following error message is seen:\n'
+            '    > Fatal in <TROOT::InitInterpreter>: cannot load library '
+            'libtinfo.so.5: cannot open shared object file: No such file or '
+            'directory\n`ncurses` must be install using conda:\n'
+            '    > conda install ncurses'
+        )
+
     elif sys.platform == "darwin":
         pass
     elif sys.platform == "win32":
@@ -169,10 +177,3 @@ if __name__ == '__main__':
     else:
         log.fatal('Unrecognised platform: {0}'.format(sys.platform))
         sys.exit(-1)
-
-log.warn('If, when launching ROOT, the following error message is seen:')
-log.warn('    > Fatal in <TROOT::InitInterpreter>: cannot load library '
-         'libtinfo.so.5: cannot open shared object file: '
-         'No such file or directory')
-log.warn('`ncurses` must be install using conda:')
-log.warn('    > conda install ncurses')
