@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import glob
 import logging as log
 import os
 import sys
@@ -17,58 +18,7 @@ DEFAULT_FILES = [
     'bin/rootcint',
     'bin/rootcling',
     'etc/root/allDict.cxx.pch',
-    'lib/root/libASImage.so',
-    'lib/root/libCling.so',
-    'lib/root/libCore.so',
-    'lib/root/libEG.so',
-    'lib/root/libGeom.so',
-    'lib/root/libGpad.so',
-    'lib/root/libGraf.so',
-    'lib/root/libGui.so',
-    'lib/root/libGuiHtml.so',
-    'lib/root/libGviz.so',
-    'lib/root/libHtml.so',
-    'lib/root/libNet.so',
-    'lib/root/libPostscript.so',
-    'lib/root/libProof.so',
-    'lib/root/libProofBench.so',
-    'lib/root/libPyROOT.so',
-    'lib/root/libRGL.so',
-    'lib/root/libRIO.so',
-    'lib/root/libRSQLite.so',
-    'lib/root/libRint.so',
-    'lib/root/libRootAuth.so',
-    'lib/root/libSessionViewer.so',
-    'lib/root/libTreeViewer.so',
-    'lib/root/libXMLParser.so',
-    'lib/root/libXrdAppUtils.so.1.0.0',
-    'lib/root/libXrdBwm-4.so',
-    'lib/root/libXrdCksCalczcrc32-4.so',
-    'lib/root/libXrdCl.so.2.0.0',
-    'lib/root/libXrdClient.so.2.0.0',
-    'lib/root/libXrdCrypto.so.1.0.0',
-    'lib/root/libXrdCryptoLite.so.1.0.0',
-    'lib/root/libXrdCryptossl-4.so',
-    'lib/root/libXrdFfs.so.2.0.0',
-    'lib/root/libXrdFileCache-4.so',
-    'lib/root/libXrdHttp-4.so',
-    'lib/root/libXrdOssSIgpfsT-4.so',
-    'lib/root/libXrdPosix.so.2.0.0',
-    'lib/root/libXrdPosixPreload.so.1.0.0',
-    'lib/root/libXrdProofd.so',
-    'lib/root/libXrdPss-4.so',
-    'lib/root/libXrdSec-4.so',
-    'lib/root/libXrdSecgsi-4.so',
-    'lib/root/libXrdSecgsiAUTHZVO-4.so',
-    'lib/root/libXrdSecgsiGMAPDN-4.so',
-    'lib/root/libXrdSecgsiGMAPLDAP-4.so',
-    'lib/root/libXrdSecpwd-4.so',
-    'lib/root/libXrdSecsss-4.so',
-    'lib/root/libXrdSecunix-4.so',
-    'lib/root/libXrdServer.so.2.0.0',
-    'lib/root/libXrdThrottle-4.so',
-    'lib/root/libXrdUtils.so.2.0.0',
-    'lib/root/libXrdXrootd-4.so'
+    'lib/root/*.so'
 ]
 
 
@@ -159,8 +109,13 @@ if __name__ == '__main__':
 
         os.symlink(env_path, padded_env_path)
 
-        for fn in DEFAULT_FILES:
-            fix_file(fn, env_path, padded_env_path)
+        for fn_glob in DEFAULT_FILES:
+            for fn in glob.glob(os.path.join(env_path, fn_glob)):
+                fix_file(
+                    os.path.relpath(fn, env_path),
+                    env_path,
+                    padded_env_path
+                )
 
         log.warn(
             'If when launching ROOT the following error message is seen:\n'
