@@ -35,7 +35,6 @@ requirements:
     - python
     - sqlite
     - krb5
-    - readline
     - graphviz # [linux]
     - qt # [linux]
   build:
@@ -48,7 +47,6 @@ requirements:
     - python
     - sqlite
     - krb5
-    - readline
     - graphviz # [linux]
     - qt # [linux]
 
