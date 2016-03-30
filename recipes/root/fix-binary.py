@@ -118,12 +118,15 @@ if __name__ == '__main__':
                 )
 
         log.warn(
-            'If when launching ROOT the following error message is seen:\n'
+            '\n\nIf when launching ROOT the following error message is seen:\n'
             '    > Fatal in <TROOT::InitInterpreter>: cannot load library '
             'libtinfo.so.5: cannot open shared object file: No such file or '
             'directory\n`ncurses` must be install using conda:\n'
-            '    > conda install ncurses'
-        )
+            '    > conda install ncurses\n\n'
+            'The LD_LIBRARY_PATH and ROOTSYS enviroment variables need to be '
+            'set in some cases. This is done automatically when activating '
+            'the enviroment. To apply this change now run:\n'
+            '    > source activate $CONDA_DEFAULT_ENV')
 
     elif sys.platform == "darwin":
         pass

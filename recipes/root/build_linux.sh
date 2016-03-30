@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# When root builds xrootd it fails to find "com_err.h", just symlink it to
+# /usr/include until I can figure out how to properly fix it
+ln -s ${PREFIX}/include/com_err.h /usr/include/com_err.h
+
 CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
 CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
 CPPFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
@@ -12,9 +16,11 @@ cmake .. \
     -Droofit=ON \
     -Dtesting=OFF \
     -Dcastor=OFF \
+    -Dbuiltin_davix=ON \
     -Dbuiltin_ftgl=ON \
     -Dbuiltin_freetype=ON \
     -Dbuiltin_glew=ON \
+    -Dbuiltin_gsl=ON \
     -Dbuiltin_pcre=ON \
     -Dbuiltin_zlib=ON \
     -Dbuiltin_lzma=ON \
@@ -43,3 +49,12 @@ sed -i 's/import os, sys, types/import os, sys, types\nsys.path.append(os.path.j
 # the various binary files
 cp ${RECIPE_DIR}/fix-binary.py $PREFIX/share/root/fix-binary.py
 cp ${RECIPE_DIR}/cleanup.py $PREFIX/share/root/cleanup.py
+
+# Add scripts to (un)set $ROOTSYS and $LD_LIBRARY_PATH on (de)activation
+mkdir -p $PREFIX/etc/conda/activate.d
+mkdir -p $PREFIX/etc/conda/deactivate.d
+cp ${RECIPE_DIR}/activateROOT.sh $PREFIX/etc/conda/activate.d
+cp ${RECIPE_DIR}/deactivateROOT.sh $PREFIX/etc/conda/deactivate.d
+
+# Clean up
+rm /usr/include/com_err.h
