@@ -8,7 +8,8 @@ jobs:
       osx_image: xcode6.4
 
     - if: (fork IN (false)) AND (NOT (type IN (pull_request)))
-      os: linux
+      os: osx
+      osx_image: xcode6.4
 
 env:
     global:

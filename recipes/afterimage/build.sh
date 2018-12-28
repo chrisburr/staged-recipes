@@ -32,6 +32,9 @@ fi
 # don't run ldconfig
 sed -i -e 's/`uname`/"hack"/g' Makefile
 
+set -x
+env
+ls $BUILD_PREFIX/bin
+which ar || true
 make AR="${AR} clq"
 make AR="${AR} clq" install
-
