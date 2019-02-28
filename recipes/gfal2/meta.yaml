@@ -1,0 +1,57 @@
+{% set name = "gfal2" %}
+{% set version = "2.16.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://gitlab.cern.ch/dmc/{{ name }}/-/archive/v{{ version }}/{{ name }}-v{{ version }}.tar.gz
+  sha256: c4381f12edc0d18c7e674f5a5ef56b2f00cf2713f1097175e4f46740951a2af2
+
+build:
+  number: 0
+  skip: True  # [not linux]
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - cmake
+    - make
+  host:
+    - xrootd
+    - davix
+    - json-c
+    - glib
+    - openldap
+    - zlib
+    - libssh2
+    - gtest
+    - libuuid
+
+test:
+  commands:
+    - soapcpp2 -h
+
+about:
+  home: https://www.genivia.com/
+  license: GPL-2.0
+  license_family: GPL
+  license_file: GPLv2_license.txt
+  summary: 'The most advanced C/C++ autocoding tools for XML Web service APIs and other XML applications'
+
+  description: |
+     gSOAP is the top-rated agile development framework for C/C++ Web service
+     APIs and XML. Join our rapidly growing world-wide customer base with
+     over a million downloads. Start expediting the development of your
+     products to meet the latest industry standards for XML, XML Web services,
+     WSDL and SOAP, REST, JSON, WS-Security, WS-Trust with SAML,
+     WS-ReliableMessaging, WS-Discovery, TR-069, ONVIF, HL7, FHIR, HIPAA,
+     CDISC, XMPP XEP, ISO 20022, SWIFT, FixML, XBRL, OTA, NDC, AWS, EWS, WCF,
+     and more. Integrates seamlessly with Apache, IIS, cURL, and WinInet.
+  doc_url: https://www.genivia.com/docs.html
+  dev_url: https://www.genivia.com/dev.html
+
+extra:
+  recipe-maintainers:
+    - chrisburr

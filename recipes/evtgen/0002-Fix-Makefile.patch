@@ -1,0 +1,25 @@
+From e56bae6e654b88ae73fd41c5e6218c680cf6c6e7 Mon Sep 17 00:00:00 2001
+From: Christopher Burr <christopher.burr@cern.ch>
+Date: Thu, 28 Feb 2019 19:29:56 +0000
+Subject: [PATCH] Fix Makefile
+
+---
+ src/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/R01-07-00/src/Makefile b/R01-07-00/src/Makefile
+index af6461a..a64e288 100644
+--- a/R01-07-00/src/Makefile
++++ b/R01-07-00/src/Makefile
+@@ -60,7 +60,7 @@ $(LIB_ARCHIVE) : $(objects)
+ 	ar cru $(LIB_ARCHIVE) $(objects)
+ 
+ # External
+-$(LIBEXT_SHARED) : $(extobjects)
++$(LIBEXT_SHARED) : $(extobjects) $(LIB_SHARED)
+ 	mkdir -p $(LIBDIR_SHARED)
+ 	@echo creating the shared library $@
+ 	$(CXX) $(LDFLAGSSHARED) $(extobjects) -o $@ -shared -Wl,$(SOFLAGS),$(notdir $@) $(FLIBS) \
+-- 
+2.20.0
+

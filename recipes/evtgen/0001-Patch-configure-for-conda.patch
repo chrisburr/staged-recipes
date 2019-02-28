@@ -1,0 +1,254 @@
+From 3ad877d940c7aedb6665c53570d46cc8623615f7 Mon Sep 17 00:00:00 2001
+From: Christopher Burr <christopher.burr@cern.ch>
+Date: Thu, 28 Feb 2019 18:59:50 +0000
+Subject: [PATCH] Patch configure for conda
+
+---
+ configure | 161 +++++++-----------------------------------------------
+ 1 file changed, 21 insertions(+), 140 deletions(-)
+
+diff --git a/R01-07-00/configure b/R01-07-00/configure
+index 375e3b7..b14b01a 100755
+--- a/R01-07-00/configure
++++ b/R01-07-00/configure
+@@ -62,7 +62,7 @@ check_arguments () {
+   done
+   return
+ }
+-		
++
+ #---------------------------------------
+ 
+ # Check that we can see (some of) the header files for the external generators.
+@@ -85,7 +85,7 @@ check_dirs() {
+       echo "Mandatory: please specify the location of the HepMC base directory"\
+             "using the configure option --hepmcdir=[full directory path]"\
+             "or set the HEPMCDIR environment variable"
+-      stop=1    
++      stop=1
+   fi
+ 
+   if [ -f $pythiaFile ]; then
+@@ -150,7 +150,7 @@ check_extlibs () {
+ 
+ #-------------------------------------------------------------
+ 
+-check_arguments $* 
++check_arguments $*
+ check_dirs
+ check_extlibs
+ 
+@@ -161,156 +161,37 @@ echo  "Compilation mode is ${COMPMODE}"
+ #
+ # User-changeable part, experts  -----------------------------
+ #
+-CXX=g++
+-CXXFLAGS_OPT="-O2 -Wall"
+-CXXFLAGS_DBG="-g -Wall"
+-CFLAGS_OPT=-O2
+-CFLAGS_DBG=-g
+-FC=gfortran
+-FFLAGS_OPT="-O2 -Wuninitialized"
+-FFLAGS_DBG=-g
+- 
++CXX=${CXX}
++FC=${GFORTRAN}
++FFLAGS=${FFLAGS}
++CFLAGS=${CFLAGS}
++CXXFLAGS=${CXXFLAGS}
++
+ FFLAGSSHARED=-fPIC
+ CFLAGSSHARED=-fPIC
+ CXXFLAGSSHARED=-fPIC
+- 
+-LDFLAGSSHARED="${CXXFLAGS_OPT} -pthread -fPIC"
++
++LDFLAGSSHARED="${CXXFLAGS_OPT} -fPIC"
+ 
+ #
+ # Find platform.
+ #
+-ARCH=`uname`
+-theGcc=`g++ --version | grep '[0-9]\.[0-9]\.[0-9]' -o | head -1 | awk -F . '{print $1}'`
+-if [ ${theGcc} = 4 ]; then
+-  ARCH=${ARCH}-gcc4
+-fi
+-if [ ${theGcc} = 5 ]; then
+-  ARCH=${ARCH}-gcc5
+-fi
+-if [ ${theGcc} = 6 ]; then
+-  ARCH=${ARCH}-gcc6
+-fi
++ARCH=${HOST}
+ echo "Platform is $ARCH"
+ 
+ #default platform settings:
+-FFLAGS="${FFLAGS_OPT}"
+-CFLAGS="${CFLAGS_OPT}"
+-CXXFLAGS="${CXXFLAGS_OPT}"
+-FLIBS="-lfrtbegin -lg2c"
++FLIBS="-lgfortran"
+ SOFLAGS="-soname"
+ 
+-if [ ${COMPMODE} = OPT ]; then
+-  FFLAGS="${FFLAGS_OPT}"
+-  CFLAGS="${CFLAGS_OPT}"
+-  CXXFLAGS="${CXXFLAGS_OPT}"
+-fi
+-if [ ${COMPMODE} = DBG ]; then
+-  FFLAGS="${FFLAGS_DBG}"
+-  CFLAGS="${CFLAGS_DBG}"
+-  CXXFLAGS="${CXXFLAGS_DBG}"
+-fi
+-if [ $ARCH = Linux ]; then
+-  FFLAGS="${FFLAGS_OPT} -Wno-globals"
+-  CFLAGS="${CFLAGS_OPT}"
+-  CXXFLAGS="${CXXFLAGS_OPT}"
+-  FLIBS="-lfrtbegin -lg2c"
+-  if [ ${COMPMODE} = OPT ]; then
+-    FFLAGS="${FFLAGS_OPT}"
+-    CFLAGS="${CFLAGS_OPT}"
+-    CXXFLAGS="${CXXFLAGS_OPT}"
+-  fi
+-  if [ ${COMPMODE} = DBG ]; then
+-    FFLAGS="${FFLAGS_DBG} -Wno-globals"
+-    CFLAGS="${CFLAGS_DBG}"
+-    CXXFLAGS="${CXXFLAGS_DBG}"
+-  fi
+-fi
+-
+-# Linux platform with gcc4: new Fortran90 compiler.
+-if [ $ARCH = Linux-gcc4 ]; then
+-  FFLAGS="${FFLAGS_OPT}"
+-  CFLAGS="${CFLAGS_OPT}"
+-  CXXFLAGS="${CXXFLAGS_OPT}"
+-  FLIBS="-lgfortran"
+-  if [ ${COMPMODE} = OPT ]; then
+-    FFLAGS="${FFLAGS_OPT}"
+-    CFLAGS="${CFLAGS_OPT}"
+-    CXXFLAGS="${CXXFLAGS_OPT}"
+-  fi
+-  if [ ${COMPMODE} = DBG ]; then
+-    FFLAGS="${FFLAGS_DBG}"
+-    CFLAGS="${CFLAGS_DBG}"
+-    CXXFLAGS="${CXXFLAGS_DBG}"
+-  fi
+-fi
+-if [ $ARCH = Linux-gcc5 ]; then
+-  FFLAGS="${FFLAGS_OPT}"
+-  CFLAGS="${CFLAGS_OPT}"
+-  CXXFLAGS="${CXXFLAGS_OPT}"
+-  FLIBS="-lgfortran"
+-  if [ ${COMPMODE} = OPT ]; then
+-    FFLAGS="${FFLAGS_OPT}"
+-    CFLAGS="${CFLAGS_OPT}"
+-    CXXFLAGS="${CXXFLAGS_OPT}"
+-  fi
+-  if [ ${COMPMODE} = DBG ]; then
+-    FFLAGS="${FFLAGS_DBG}"
+-    CFLAGS="${CFLAGS_DBG}"
+-    CXXFLAGS="${CXXFLAGS_DBG}"
+-  fi
+-fi
+-if [ $ARCH = Linux-gcc6 ]; then
+-  FFLAGS="${FFLAGS_OPT}"
+-  CFLAGS="${CFLAGS_OPT}"
+-  CXXFLAGS="${CXXFLAGS_OPT}"
+-  FLIBS="-lgfortran"
+-  if [ ${COMPMODE} = OPT ]; then
+-    FFLAGS="${FFLAGS_OPT}"
+-    CFLAGS="${CFLAGS_OPT}"
+-    CXXFLAGS="${CXXFLAGS_OPT}"
+-  fi
+-  if [ ${COMPMODE} = DBG ]; then
+-    FFLAGS="${FFLAGS_DBG}"
+-    CFLAGS="${CFLAGS_DBG}"
+-    CXXFLAGS="${CXXFLAGS_DBG}"
+-  fi
+-fi
+-
+-# Add C++11 options if required
+-theGcc2=`g++ --version | grep '[0-9]\.[0-9]\.[0-9]' -o | head -1 | awk -F . '{print $2}'`
+-gccVar=`echo $theGcc`
+-gccVar2=`echo $theGcc2`
+ # Flag to make sure c++11 is enabled for compiling certain classes, e.g. MT random engine.
+ CPP11=1
+-# Check that we have gcc version 4.7 and above
+-if [ $gccVar -le 4 ]; then
+-  if [ $gccVar2 -le 6 ]; then
+-    echo "Not enabling c++11 features"
+-    CPP11=0
+-  fi
+-fi
+ 
+ if [ $CPP11 = 1 ]; then
+   echo "c++11 is enabled"
+ fi
+ 
+ # Mac OS platform with gcc4
+-if [[ $ARCH == Darwin* ]]; then
+-  tt=`gfortran -print-search-dirs|grep libraries|cut -d'=' -f2|sed  's/:/ /g'`
+-  LIBGFORTRANLOCATION=''
+-  for i in $tt
+-  do
+-    if [ -e $i/libgfortran.so ]
+-    then
+-      LIBGFORTRANLOCATION=$i
+-      break
+-    elif [ -e $i/libgfortran.dylib ]
+-    then
+-      LIBGFORTRANLOCATION=$i
+-      break
+-    fi
+-  done
+-  FLIBS="-L${LIBGFORTRANLOCATION} -lgfortran"
++if [[ `uname` == Darwin* ]]; then
+   SOFLAGS="-install_name"
+ fi
+ 
+@@ -318,7 +199,7 @@ fi
+ 
+ echo -n "Creating config.mk ... "
+ 
+-rm -f config.mk 
++rm -f config.mk
+ 
+ cat > config.mk << EOF
+ 
+@@ -327,11 +208,11 @@ VERSION = ${VERSION}
+ 
+ PREFIX = ${PREFIX}
+ 
+-SHELL = /bin/bash 
+-ARCH = ${ARCH} 
++SHELL = /bin/bash
++ARCH = ${ARCH}
+ LCGPLATFORM = ${LCGPLATFORM}
+-FC = ${FC} 
+-FFLAGS = ${FFLAGS} 
++FC = ${FC}
++FFLAGS = ${FFLAGS}
+ CFLAGS = ${CFLAGS}
+ CXX = ${CXX}
+ CXXFLAGS = ${CXXFLAGS}
+@@ -364,7 +245,7 @@ FFLAGSSHARED = ${FFLAGSSHARED}
+ CFLAGSSHARED = ${CFLAGSSHARED}
+ CXXFLAGSSHARED = ${CXXFLAGSSHARED}
+ 
+-LDFLAGSSHARED = ${LDFLAGSSHARED} 
++LDFLAGSSHARED = ${LDFLAGSSHARED}
+ 
+ FLIBS = ${FLIBS}
+ 
+@@ -413,7 +294,7 @@ echo " done"
+ 
+ set -v
+ mkdir -p tmp/ tmp/EvtGenBase tmp/EvtGenModels tmp_ext/EvtGenExternal lib/ lib/archive
+-set +v 
++set +v
+ 
+ echo -e  "\n\nType 'make' to build everything or 'make help' to list build targets.\n\n"
+ 
+-- 
+2.20.0
+

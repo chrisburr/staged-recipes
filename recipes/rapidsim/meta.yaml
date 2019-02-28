@@ -1,0 +1,40 @@
+{% set name = "rapidsim" %}
+{% set version = "1.4.3" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/gcowan/RapidSim/archive/v{{ version }}.tar.gz
+  sha256: a88f2a7c76fd5bbb0b16b9b3bcdfaedbee1e78a5e9be407aacc0600245f94468
+
+build:
+  number: 0
+  skip: True  # [win]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make
+  host:
+    - root
+
+# test:
+#   commands:
+#     - soapcpp2 -h
+
+about:
+  home: https://github.com/gcowan/RapidSim
+  license: MIT
+  license_family: MIT
+  license_file: Licence.md
+  summary: 'A fast Monte Carlo generator for simulation of heavy-quark hadron decays'
+  doc_url: https://github.com/gcowan/RapidSim
+  dev_url: https://github.com/gcowan/RapidSim
+
+extra:
+  recipe-maintainers:
+    - chrisburr

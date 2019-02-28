@@ -1,0 +1,39 @@
+{% set name = "hepmc" %}
+{% set version = "02.06.09" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://gitlab.cern.ch/hepmc/HepMC/-/archive/HEPMC_{{ version|replace(".", "_") }}/HepMC-HEPMC_{{ version|replace(".", "_") }}.tar.gz
+  sha256: e589a823b5e35cdf9ad30f361fd0fcb97ea0cd38534aa5f0e147656e6dcc9fd3
+  folder: hepmc_source
+
+build:
+  number: 0
+  skip: True  # [win]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make
+
+# test:
+#   commands:
+#     - soapcpp2 -h
+
+about:
+  home: http://hepmc.web.cern.ch/hepmc/
+  license: GPL-2.0
+  license_family: GPL
+  license_file: hepmc_source/COPYING
+  summary: 'A C++ Event Record for Monte Carlo Generators'
+  doc_url: http://hepmc.web.cern.ch/hepmc/
+  dev_url: https://gitlab.cern.ch/hepmc/HepMC/
+
+extra:
+  recipe-maintainers:
+    - chrisburr

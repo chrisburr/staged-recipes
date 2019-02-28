@@ -1,0 +1,54 @@
+{% set name = "photos" %}
+{% set version = "3.61" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: http://photospp.web.cern.ch/photospp/resources/PHOTOS.{{ version }}/PHOTOS.{{ version }}.tar.gz
+  sha256: 9c63d40f5727122572a152dae3f604fecfdc28d2f4fde9d02a95b04285884d44
+
+build:
+  number: 0
+  skip: True  # [win]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('fortran') }}
+    - cmake
+    - make
+    - sed
+  host:
+    - pythia8
+    - hepmc
+    # - photos
+    # - tauola
+
+test:
+  requires:
+    - root
+  source_files:
+    - validation
+  commands:
+    - cd validation
+    - ./configure
+    - make
+    - ./genAllDecayExamples.sh
+    - ./compareAllDecays.sh
+    # - ./testCPVDecays.cc
+
+about:
+  home: http://photospp.web.cern.ch/photospp/
+  license: MIT
+  license_family: MIT
+  # license_file: Licence.md
+  summary: 'A universal Monte Carlo for QED radiative corrections'
+  doc_url: http://photospp.web.cern.ch/photospp/
+  dev_url: http://photospp.web.cern.ch/photospp/
+
+extra:
+  recipe-maintainers:
+    - chrisburr

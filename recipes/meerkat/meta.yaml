@@ -1,0 +1,60 @@
+{% set name = "meerkat" %}
+{% set version = "0.0.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://gitlab.cern.ch/lhcb/Urania/-/archive/master/Urania-master.tar.gz
+  sha256: 49cd27783c35097cfe4db772ba8cc6a6cf2458734c08a581c67e3c6dc85d0b46
+  patches:
+    - 0001-Fix-Makefile.patch
+
+build:
+  number: 0
+  skip: True  # [win]
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - make
+  host:
+    - root
+
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libMeerkat.so
+
+about:
+  home: https://gitlab.cern.ch/lhcb/Urania/tree/master/PhysTools/Meerkat
+  license: UNKNOWN
+  # license_family:
+  # license_file:
+  summary: 'A multidimensional kernel density estimation package'
+
+  description: |
+     Meerkat is the multidimensional kernel density estimation package.
+
+     It uses a variation of kernel density estimation (KDE) technique,
+     relative KDE, where kernel density provides the correction on top
+     of some approximation PDF. The approximation PDF defines the behaviour
+     of the resulting PDF estimate at the edges of the phase space and
+     in the region of rapidly-changing structures. This approach allows
+     to use kernel density estimation in a multidimensional case, for
+     the phase spaces with have non-trivial boundaries (such as for
+     Dalitz plots).
+
+     The code uses ROOT NTuples as input data sets, and can output
+     the resulting estimated distributions as ROOT histograms (for 1D
+     and 2D distributions), therefore it should be easily integrated into
+     the analyses using e.g. Laura++. For analyses in more than 2 dimensions,
+     the estimated PDFs can be calculated as the multilinear interpolation
+     on the binned grid, to allow fast calculation as part of the unbinned
+     amplitude fits.
+  # doc_url:
+  # dev_url:
+
+extra:
+  recipe-maintainers:
+    - chrisburr

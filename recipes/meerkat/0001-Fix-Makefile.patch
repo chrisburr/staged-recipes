@@ -1,0 +1,68 @@
+From 45aba70ede05bc3ca138dc8394656c99f93bd1c6 Mon Sep 17 00:00:00 2001
+From: Chris Burr <chrisburr@users.noreply.github.com>
+Date: Tue, 26 Feb 2019 17:05:19 +0000
+Subject: [PATCH] Fix Makefile
+
+---
+ PhysTools/Meerkat/StandAloneMakefile | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
+
+diff --git a/PhysTools/Meerkat/StandAloneMakefile b/PhysTools/Meerkat/StandAloneMakefile
+index 157ea274..331db615 100644
+--- a/PhysTools/Meerkat/StandAloneMakefile
++++ b/PhysTools/Meerkat/StandAloneMakefile
+@@ -52,24 +52,18 @@ ROOTVERSION := $(shell $(ROOTCONFIG) --version | awk -F. '{print $$1}')
+
+ INCLUDES =
+ SRCDIR   = src
+-INCDIR   = inc
++INCDIR   = .
+ LIBDIR   = lib
+ WORKDIR  = tmp
+
+ ifeq ($(findstring linux, $(ARCH)),linux)
+ # This set here should work for Linux.
+-CXX      = g++
+-LD       = g++
+-CXXFLAGS = -g -O3 -Wall -Wextra -Wshadow -Woverloaded-virtual -Werror -fPIC
+ MFLAGS   = -MM
+ SOFLAGS  = -shared
+ endif
+
+ ifeq ($(ARCH),macosx64)
+ # For Mac OS X you may need to put -m64 in CXXFLAGS and SOFLAGS.
+-CXX      = g++
+-LD       = g++
+-CXXFLAGS = -g -O3 -Wall -Wextra -Wshadow -Woverloaded-virtual -Werror -fPIC -m64
+ MFLAGS   = -MM
+ SOFLAGS  = -m64 -dynamiclib -single_module -undefined dynamic_lookup
+ endif
+@@ -118,14 +112,14 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
+ 	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+ # Rule to make ROOTCINT output file
+-$(CINTOBJ): $(HHLIST) $(INCDIR)/$(PACKAGE)_LinkDef.h
++$(CINTOBJ): $(HHLIST) $(INCDIR)/$(PACKAGE)/$(PACKAGE)_LinkDef.h
+ 	@mkdir -p $(OBJDIR)
+ ifeq ($(ROOTVERSION),5)
+ 	@echo "Running rootcint"
+-	@$(ROOTBINDIR)/rootcint -f $(CINTFILE) -c $(INCLUDES) $(notdir $(HHLIST)) $(INCDIR)/$(PACKAGE)_LinkDef.h
++	@$(ROOTBINDIR)/rootcint -f $(CINTFILE) -c $(INCLUDES) $(notdir $(HHLIST)) $(INCDIR)/$(PACKAGE)/$(PACKAGE)_LinkDef.h
+ else
+ 	@echo "Running rootcling"
+-	@$(ROOTBINDIR)/rootcling -f $(CINTFILE) -s $(SHLIBFILE) -rml $(SHLIBFILE) -rml libEG.so -rml libHist.so -rml libMatrix.so -rml libNet.so -rml libRIO.so -rml libTree.so -rml libMathCore.so -rml libCore.so -rmf $(ROOTMAPFILE) -c $(INCLUDES) $(notdir $(HHLIST)) $(INCDIR)/$(PACKAGE)_LinkDef.h
++	@$(ROOTBINDIR)/rootcling -f $(CINTFILE) -s $(SHLIBFILE) -rml $(SHLIBFILE) -rml libEG.so -rml libHist.so -rml libMatrix.so -rml libNet.so -rml libRIO.so -rml libTree.so -rml libMathCore.so -rml libCore.so -rmf $(ROOTMAPFILE) -c $(INCLUDES) $(notdir $(HHLIST)) $(INCDIR)/$(PACKAGE)/$(PACKAGE)_LinkDef.h
+ endif
+ 	@echo "Compiling $(CINTFILE)"
+ 	@$(CXX) $(CXXFLAGS) -c $(CINTFILE) -o $(CINTOBJ)
+@@ -150,7 +144,7 @@ $(ROOTMAPFILE): $(SHLIBFILE)
+ 	@echo "Making $(ROOTMAPFILE)"
+ 	@mkdir -p $(LIBDIR)
+ 	@rm -f $(ROOTMAPFILE)
+-	@rlibmap -f -o $(ROOTMAPFILE) -l $(SHLIBFILE) -d libCore.so libEG.so libHist.so libMathCore.so libMatrix.so libNet.so libRIO.so libTree.so -c $(INCDIR)/$(PACKAGE)_LinkDef.h
++	@rlibmap -f -o $(ROOTMAPFILE) -l $(SHLIBFILE) -d libCore.so libEG.so libHist.so libMathCore.so libMatrix.so libNet.so libRIO.so libTree.so -c $(INCDIR)/$(PACKAGE)/$(PACKAGE)_LinkDef.h
+ endif
+
+ # Useful build targets
+--
+2.20.1

@@ -1,0 +1,60 @@
+{% set name = "evtgen" %}
+{% set version = "1.07.00" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://evtgen.hepforge.org/downloads?f=EvtGen-0{{ version }}.tar.gz
+  sha256: 9c63d40f5727122572a152dae3f604fecfdc28d2f4fde9d02a95b04285884d44
+  patches:
+    - 0001-Patch-configure-for-conda.patch
+    - 0002-Fix-Makefile.patch
+
+build:
+  number: 0
+  skip: True  # [win]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('fortran') }}
+    - cmake
+    - make
+    - sed
+  host:
+    - hepmc
+    - pythia8
+    # - photos
+    # - tauola
+  run:
+    - hepmc
+    - pythia8
+
+test:
+  requires:
+    - root
+  source_files:
+    - R01-07-00/validation
+  commands:
+    - cd R01-07-00/validation
+    - ./configure
+    - make
+    - ./genAllDecayExamples.sh
+    - ./compareAllDecays.sh
+    # - ./testCPVDecays.cc
+
+about:
+  home: https://evtgen.hepforge.org/
+  license: MIT
+  license_family: MIT
+  # license_file: Licence.md
+  summary: 'A fast Monte Carlo generator for simulation of heavy-quark hadron decays'
+  doc_url: https://evtgen.hepforge.org/doc/
+  dev_url: https://evtgen.hepforge.org/
+
+extra:
+  recipe-maintainers:
+    - chrisburr
