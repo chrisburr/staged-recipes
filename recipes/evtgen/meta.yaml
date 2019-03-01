@@ -35,16 +35,14 @@ requirements:
 
 test:
   requires:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - root
+    - sed
+    - findutils
   source_files:
     - R01-07-00/validation
-  commands:
-    - cd R01-07-00/validation
-    - ./configure
-    - make
-    - ./genAllDecayExamples.sh
-    - ./compareAllDecays.sh
-    # - ./testCPVDecays.cc
+    - R01-07-00/config.mk
 
 about:
   home: https://evtgen.hepforge.org/

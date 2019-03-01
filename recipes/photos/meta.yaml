@@ -27,18 +27,21 @@ requirements:
     # - photos
     # - tauola
 
-test:
-  requires:
-    - root
-  source_files:
-    - validation
-  commands:
-    - cd validation
-    - ./configure
-    - make
-    - ./genAllDecayExamples.sh
-    - ./compareAllDecays.sh
-    # - ./testCPVDecays.cc
+# test:
+#   requires:
+#     - {{ compiler('c') }}
+#     - {{ compiler('cxx') }}
+#     - root
+#   source_files:
+#     - validation
+#     - config.mk
+#   commands:
+#     - cd validation
+#     - ./configure
+#     - make
+#     - ./genAllDecayExamples.sh
+#     - ./compareAllDecays.sh
+#     # - ./testCPVDecays.cc
 
 about:
   home: http://photospp.web.cern.ch/photospp/

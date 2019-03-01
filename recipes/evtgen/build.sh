@@ -10,5 +10,12 @@ cd R??-??-??
   # --photosdir="${PREFIX}"
   # --tauoladir="${PREFIX}"
 
-make -j${CPU_COUNT}
+# Parallel builds are unreliable
+make -j1
 make install
+
+SHARE_DIR="${PREFIX}/share/evtgen"
+mkdir -p "${SHARE_DIR}"
+cp config.mk "${SHARE_DIR}"
+cp DECAY.DEC "${SHARE_DIR}"
+cp evt.pdl "${SHARE_DIR}"
