@@ -1,0 +1,58 @@
+context:
+  name: vectorclass
+  version: "2.02.03"
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  url: https://github.com/vectorclass/version2/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: f22acda6b3c0aff2d9d1c8ec44d29085e74d4cfec47f981942e2413dcfdba6e0
+
+build:
+  number: 0
+  # One noarch build per OS family (conda-forge.yml: noarch_platforms) so headers
+  # install to the right prefix: $PREFIX/include (Unix), %LIBRARY_INC% (Windows).
+  noarch: generic
+  script:
+    - if: unix
+      then: |
+        mkdir -p "$PREFIX/include/vectorclass"
+        cp *.h "$PREFIX/include/vectorclass/"
+      else: |
+        if not exist "%LIBRARY_INC%\vectorclass" mkdir "%LIBRARY_INC%\vectorclass"
+        copy /Y *.h "%LIBRARY_INC%\vectorclass\"
+
+requirements:
+  run:
+    - if: unix
+      then: __unix
+      else: __win
+
+tests:
+  - package_contents:
+      include:
+        - vectorclass/vectorclass.h
+        - vectorclass/instrset.h
+        - vectorclass/vectorf256.h
+        - vectorclass/vectori512.h
+        - vectorclass/vectormath_exp.h
+
+about:
+  homepage: https://github.com/vectorclass/version2
+  license: Apache-2.0
+  license_file: LICENSE
+  summary: C++ vector class library for SIMD programming on x86 and x86-64
+  description: |
+    The Vector Class Library (VCL) is a C++ header-only library that uses the
+    Single Instruction Multiple Data (SIMD) instructions to improve performance
+    on modern x86 and x86-64 microprocessors (SSE2 through AVX-512). It provides
+    classes for vectors of integers and floating point numbers, together with
+    mathematical functions operating on these vectors.
+  documentation: https://github.com/vectorclass/manual
+  repository: https://github.com/vectorclass/version2
+
+extra:
+  recipe-maintainers:
+    - chrisburr

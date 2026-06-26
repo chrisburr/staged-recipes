@@ -1,0 +1,5 @@
+# One noarch build per OS family so headers reach the right include prefix
+# (Unix $PREFIX/include vs Windows %LIBRARY_PREFIX%\include).
+noarch_platforms:
+  - linux_64
+  - win_64
